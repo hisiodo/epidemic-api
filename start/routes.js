@@ -1,5 +1,3 @@
-'use strict'
-
 /*
 |--------------------------------------------------------------------------
 | Routes
@@ -18,16 +16,12 @@ const Route = use('Route');
 
 Route.group(() => {
   Route.resource('users', 'User/UserController')
-    .validator(
-      new Map([
-        [['products.store'], ['User/StoreUser']]
-      ])
-    )
+    .validator(new Map([[['users.store'], ['User/StoreUser']]]))
     .apiOnly();
+});
 
-  Route.group(()=>{
-    Route.resource('session', 'Session/SessionController').validator( new Map([
-      [['session.store'], ['Session/StoreSession']]
-    ]))
-  }).apiOnly();
+Route.group(() => {
+  Route.resource('sessions', 'Session/SessionController')
+    .validator(new Map([[['sessions.store'], ['Session/StoreSession']]]))
+    .apiOnly();
 });

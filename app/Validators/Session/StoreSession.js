@@ -1,7 +1,7 @@
 class StoreSession {
   get rules() {
     return {
-      email: 'required|email|unique:users',
+      email: 'required|email',
       password: 'required',
     };
   }
@@ -12,6 +12,10 @@ class StoreSession {
       'email.email': 'You must provide a valid email address.',
       'password.required': 'You must provide a password',
     };
+  }
+
+  async fails(error) {
+    return this.ctx.response.status(400).send({ validation: error });
   }
 }
 

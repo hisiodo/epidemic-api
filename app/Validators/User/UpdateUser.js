@@ -1,4 +1,4 @@
-class StoreUser {
+class UpdateUser {
   get rules() {
     return {
       email: 'email|unique:users',
@@ -14,6 +14,10 @@ class StoreUser {
       'authorized.boolean': 'This value shuold be a boolean',
     };
   }
+
+  async fails(error) {
+    return this.ctx.response.status(400).send({ validation: error });
+  }
 }
 
-module.exports = StoreUser;
+module.exports = UpdateUser;
