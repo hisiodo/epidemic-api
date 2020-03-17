@@ -1,19 +1,18 @@
-'use strict'
-
 class StoreSession {
-  get rules () {
+  get rules() {
     return {
       email: 'required|email|unique:users',
-      password: 'required'
-    }
+      password: 'required',
+    };
   }
-  get messages () {
+
+  get messages() {
     return {
       'email.required': 'You must provide a email address.',
       'email.email': 'You must provide a valid email address.',
-      'password.required': 'You must provide a password'
-    }
+      'password.required': 'You must provide a password',
+    };
   }
 }
 
-module.exports = StoreSession
+module.exports = StoreSession;

@@ -10,6 +10,8 @@ class UserSchema extends Schema {
         .notNullable()
         .unique();
       table.string('password', 60).notNullable();
+      table.bollean('authorized').notNullable();
+
       table.timestamps();
     });
   }

@@ -2,18 +2,23 @@
 const User = use('App/Models/User');
 
 class UserController {
+  async index({ response }) {
+    const users = await User.all();
+    return response.status(200).json({ users });
+  }
+
+  async show({ response, params }) {
+    const user = await User.findOrFail(params.id);
+    if (!user) {
+      return response.status(400).json({ error: 'User does not exist' });
+    }
+    return response.status(200).json({ user });
+  }
+
   async store({ request, response }) {
     const data = request.only(['email', 'password']);
-
-    const userExist = await User.findBy('email', data.email);
-
-    if (userExist) {
-      return response.status(404).json({ error: 'User already exist' });
-    }
-
     const user = await User.create(data);
-
-    return user;
+    return response.status(201).json({ user });
   }
 
   async update({ request, response, params }) {
@@ -23,11 +28,20 @@ class UserController {
     }
     const user = await User.findOrFail(params.id);
     if (!user) {
-      return response.status(400).send({ error: 'Usuário inexistente' });
+      return response.status(400).json({ error: 'User does not exist' });
     }
-    await user.merge(data);
+    await user.merge(dataRequest);
     await user.save();
-    return user;
+    return response.status(200).json({ user });
+  }
+
+  async destroy({ response, params }) {
+    const user = await User.findOrFail(params.id);
+    if (!user) {
+      return response.status(400).json({ error: 'User does not exist' });
+    }
+    await user.delete();
+    return response.status(200).json({ delete: 'User deleted with sucess' });
   }
 }
 
