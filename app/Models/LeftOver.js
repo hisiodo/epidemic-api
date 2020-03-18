@@ -6,6 +6,10 @@ class LeftOver extends Model {
     super.boot();
   }
 
+  static get table() {
+    return 'leftovers';
+  }
+
   seller() {
     return this.belongsTo('App/Models/Seller', 'seller_id', 'id');
   }

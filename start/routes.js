@@ -25,3 +25,29 @@ Route.group(() => {
     .validator(new Map([[['sessions.store'], ['Session/StoreSession']]]))
     .apiOnly();
 });
+
+Route.group(() => {
+  Route.resource('sellers', 'Seller/SellerController')
+    .validator(
+      new Map([
+        [['sellers.store'], ['Seller/StoreSeller']],
+        [['sellers.update'], ['Seller/UpdateSeller']],
+      ])
+    )
+    .apiOnly();
+}).middleware(['auth']);
+
+Route.group(() => {
+  Route.resource('companies', 'Company/CompanyController')
+    .validator(
+      new Map([
+        [['companies.store'], ['Company/StoreCompany']],
+        [['companies.update'], ['Company/UpdateCompany']],
+      ])
+    )
+    .apiOnly();
+}).middleware(['auth']);
+
+Route.group(() => {
+  Route.resource('leftovers', 'Leftover/LeftoverController').apiOnly();
+}).middleware(['auth']);

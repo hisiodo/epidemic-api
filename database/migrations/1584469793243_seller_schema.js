@@ -7,7 +7,7 @@ class SellerSchema extends Schema {
       table.increments();
       table.timestamps();
       table.string('name', 50).notNullable();
-      table.string('lastName', 50).notNullable();
+      table.string('last_name', 50).notNullable();
       table
         .integer('company_id')
         .notNullable()
