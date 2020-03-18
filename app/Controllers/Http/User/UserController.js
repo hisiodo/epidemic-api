@@ -12,17 +12,44 @@ class UserController {
     if (!user) {
       return response.status(400).json({ error: 'User does not exist' });
     }
+    await user.loadMany(['roles', 'permissions']);
     return response.status(200).json({ user });
   }
 
   async store({ request, response }) {
-    const data = request.only(['email', 'password', 'authorized']);
+    const { permissions, roles, ...data } = request.only([
+      'email',
+      'password',
+      'authorized',
+      'permissions',
+      'roles',
+    ]);
+
+    console.log({ permissions, roles, ...data });
+
     const user = await User.create(data);
+
+    if (roles) {
+      await user.roles().attach(roles);
+    }
+
+    if (permissions) {
+      await user.permissions().attach(permissions);
+    }
+
+    await user.loadMany(['roles', 'permissions']);
+
     return response.status(201).json({ user });
   }
 
   async update({ request, response, params }) {
-    const dataRequest = request.all();
+    const { permissions, roles, ...dataRequest } = request.only([
+      'email',
+      'password',
+      'authorized',
+      'permissions',
+      'roles',
+    ]);
     if (!dataRequest) {
       return response.status(400).send({ error: 'Dados não enviados' });
     }
@@ -30,8 +57,18 @@ class UserController {
     if (!user) {
       return response.status(400).json({ error: 'User does not exist' });
     }
-    await user.merge(dataRequest);
+
+    if (roles) {
+      await user.roles().sync(roles);
+    }
+
+    if (permissions) {
+      await user.permissions().sync(permissions);
+    }
+    user.merge(dataRequest);
     await user.save();
+    await user.loadMany(['roles', 'permissions']);
+
     return response.status(200).json({ user });
   }
 
