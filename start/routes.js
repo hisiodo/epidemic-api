@@ -16,6 +16,7 @@ const Route = use('Route');
 
 Route.group(() => {
   Route.resource('users', 'User/UserController')
+    .middleware(['auth'])
     .validator(new Map([[['users.store'], ['User/StoreUser']]]))
     .apiOnly();
 });
