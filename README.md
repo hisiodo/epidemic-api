@@ -1,7 +1,7 @@
 ## LeftOver API 
 
 
-Api que provê aesso a recursos para cadastro e recuperação de informações sobrevalores a serem usados em promoções nas vendas.
+Api que provê aesso a recursos para cadastro e recuperação de informações sobre valores a serem usados em promoções nas vendas.
 Funcionalidades incluídas:
 Cadastro:
   Vendedores
