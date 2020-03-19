@@ -2,7 +2,7 @@ class StoreSeller {
   get rules() {
     return {
       name: 'required|string|max:50',
-      lastName: 'required|string|max:50',
+      last_name: 'required|string|max:50',
       user_id: 'required|number',
       company_id: 'required|number',
     };
