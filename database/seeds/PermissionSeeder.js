@@ -15,6 +15,26 @@ class PermissionSeeder {
   async run() {
     await Promise.all([
       await Permission.create({
+        slug: 'create_user',
+        name: 'Create Users',
+        description: 'Create Users',
+      }),
+      await Permission.create({
+        slug: 'update_user',
+        name: 'Update Users',
+        description: 'Update Users',
+      }),
+      await Permission.create({
+        slug: 'delete_user',
+        name: 'Delete Users',
+        description: 'Delete Users',
+      }),
+      await Permission.create({
+        slug: 'read_user',
+        name: 'Read Users',
+        description: 'Read users',
+      }),
+      await Permission.create({
         slug: 'create_permission',
         name: 'Create Permissions',
         description: 'Create Permissions',
