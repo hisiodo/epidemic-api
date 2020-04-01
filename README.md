@@ -1,18 +1,3 @@
-## LeftOver API 
-
-
-Api que provê aesso a recursos para cadastro e recuperação de informações sobre valores a serem usados em promoções nas vendas.
-Funcionalidades incluídas:
-Cadastro:
-  Vendedores
-  Empresas
-  Usuários
-  Permissões
-  Papéis (Administrador, vendedor)
-  Valor de Abatimento(Left Over)
-Operações:
-  Validações de envio de dados
-  Manipulação do saldo de promoção
 ### Para executar
 1) Clone o repositório
 2) execute no terminal o comando 
