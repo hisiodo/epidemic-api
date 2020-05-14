@@ -20,9 +20,10 @@ class UserController {
     const { permissions, roles, ...data } = request.only([
       'email',
       'password',
-      'authorized',
       'permissions',
       'roles',
+      'name',
+      'identifier',
     ]);
 
     console.log({ permissions, roles, ...data });
@@ -46,9 +47,10 @@ class UserController {
     const { permissions, roles, ...dataRequest } = request.only([
       'email',
       'password',
-      'authorized',
       'permissions',
       'roles',
+      'name',
+      'identifier',
     ]);
     if (!dataRequest) {
       return response.status(400).send({ error: 'Dados não enviados' });

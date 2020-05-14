@@ -22,11 +22,37 @@ Route.group(() => {
 });
 
 Route.group(() => {
+  Route.resource('lives', 'Life/LifeController')
+    // .middleware(['auth'])
+    .apiOnly();
+  // .validator(new Map([[['lives.store'], ['User/StoreUser']]]))
+});
+
+Route.group(() => {
   Route.resource('sessions', 'Session/SessionController')
     .validator(new Map([[['sessions.store'], ['Session/StoreSession']]]))
     .apiOnly();
 });
 
+Route.group(() => {
+  Route.resource(
+    'life_positions',
+    'GlobalPositionLife/GlobalPositionLifeController'
+  )
+    .except(['show'])
+    .middleware(['auth'])
+    .validator(
+      new Map([
+        [['users.store'], ['GlobalPositionLife/StoreGlobalPositionLife']],
+      ])
+    )
+    .apiOnly();
+});
+
+Route.get(
+  'life_positions/:id',
+  'GlobalPositionLife/GlobalPositionLifeController.show'
+).middleware(['auth']);
 
 // Route.group(() => {
 //   Route.resource('companies', 'Company/CompanyController')

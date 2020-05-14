@@ -16,8 +16,9 @@ class UserSeeder {
     const role = 1;
     const user = await User.create({
       email: 'administrator@admin.com',
+      identifier: 'sus12345',
+      name: 'Administrador',
       password: 's3TOwcjeF4ePYGxHDvtGNJKTenUszo5m',
-      authorized: true,
     });
     await user.roles().attach([role]);
   }

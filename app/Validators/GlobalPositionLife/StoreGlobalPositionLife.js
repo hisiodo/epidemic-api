@@ -1,15 +1,13 @@
 class StoreSession {
   get rules() {
     return {
-      identifier: 'required|string',
-      password: 'required',
+      positions: 'required|array',
     };
   }
 
   get messages() {
     return {
-      'identifier.required': 'Você deve fornecer um identificador',
-      'password.required': 'Você deve fornecer um password',
+      'positions.required': 'You must provide the positions .',
     };
   }
 
