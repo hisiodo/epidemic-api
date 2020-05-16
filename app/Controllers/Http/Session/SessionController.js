@@ -18,7 +18,6 @@ class SessionController {
         error: 'usuário não tem credenciais para acesso',
       });
     }
-    console.log('chegou aqui');
 
     return response.status(200).json({
       user: { name, identifier, profile_exist, authorized, role: slug },

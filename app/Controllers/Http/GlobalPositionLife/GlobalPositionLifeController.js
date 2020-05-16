@@ -21,14 +21,12 @@ class GlobalLifePositionController {
 
   async store({ request, response, auth }) {
     const { positions } = request.all();
+    console.log(positions);
 
     const { user } = auth;
     const life = await Life.findBy({ user_id: user.id });
 
-    console.log(life);
-
     const globalPosition = await GlobalPosition.createMany(positions);
-    console.log(globalPosition);
 
     await life.positions().saveMany(globalPosition);
 

@@ -7,6 +7,7 @@ class LifeController {
   async index({ response }) {
     const lives = await Life.query()
       .with('positions')
+      .with('user')
       .fetch();
     return response.status(200).json({ lives });
   }
@@ -14,6 +15,7 @@ class LifeController {
   async store({ request, response }) {
     const lifeDataRequest = request.all();
     const lifeTransaction = await Database.beginTransaction();
+    console.log(lifeDataRequest);
 
     try {
       const userInstance = await generator.generateUser(
