@@ -9,7 +9,6 @@ class LifeSchema extends Schema {
       table.date('quarantine_date');
       table.string('comorbidity', 255).notNullable();
       table.string('details', 255).notNullable();
-      table.integer('days_to_repeat_exam').unsigned();
       table
         .integer('user_id')
         .unsigned()
