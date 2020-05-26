@@ -2,12 +2,18 @@
 const Profile = use('App/Models/Profile');
 
 class ProfileController {
-  async update({ request, response, auth }) {
-    const { global_positions, ...data } = request.data();
+  async update({ request, response, params }) {
+    const dataProfileUpdate = request.all();
 
-    const profile = await Profile.create(data);
+    const profile = await Profile.find(params.id);
 
-    await profile.user().associate(auth.user);
+    if (!profile) {
+      return response.status(400).json({ error: 'Perfil Inexistente' });
+    }
+
+    await profile.merge(dataProfileUpdate);
+
+    await profile.user().associate(profile.user_id);
 
     return response.status(201).json({ profile });
   }

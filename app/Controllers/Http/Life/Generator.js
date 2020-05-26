@@ -14,7 +14,7 @@ class Generator {
       await userInstance.roles().attach([3], null, transaction);
 
       await Profile.create(
-        { ...profile, name: user.name, user_id: userInstance.id },
+        { ...profile, user_id: userInstance.id },
         transaction
       );
 

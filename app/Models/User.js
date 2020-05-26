@@ -40,6 +40,10 @@ class User extends Model {
       '@provider:Adonis/Acl/HasPermission',
     ];
   }
+
+  profile() {
+    return this.hasOne('App/Models/Profile');
+  }
 }
 
 module.exports = User;

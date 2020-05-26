@@ -1,22 +1,66 @@
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Life = use('App/Models/Life');
 const Database = use('Database');
+const Profile = use('App/Models/Profile');
 const generator = require('./Generator');
+const formatDate = require('../../../utils/Utils');
 
 class LifeController {
-  async index({ response }) {
+  async index({ response, request }) {
+    const page = request.input('page');
     const lives = await Life.query()
-      .with('positions')
+      .with('homePosition')
       .with('user')
+      .with('positions')
+      .paginate(page, 30);
+
+    const livesFiltered = async () => {
+      return Promise.all(
+        lives.toJSON().data.map(async live => {
+          const profile = await Profile.findBy('user_id', `${live.user.id}`);
+
+          const positions = [live.positions[live.positions.length - 1]];
+          return { ...live, positions, profile };
+        })
+      );
+    };
+
+    const livesChanged = await livesFiltered();
+
+    return response.status(200).json(livesChanged);
+  }
+
+  async show({ response, params, request }) {
+    let date = request.input('date');
+    const lifeId = params.id;
+    const life = await Life.query()
+      .where({ id: lifeId })
+      .with('user')
+      .with('homePosition')
+      .with('positions')
       .fetch();
-    return response.status(200).json({ lives });
+    if (!life) {
+      return response.status(400).json({ error: 'Vida inexistente' });
+    }
+    if (!request.input('date')) {
+      date = formatDate(new Date());
+    }
+
+    const positions = [
+      ...life
+        .toJSON()[0]
+        .positions.filter(
+          position => position.created_at.split(' ')[0] === date
+        ),
+    ];
+    const lifeShow = { ...life.toJSON()[0], positions };
+
+    return response.status(200).json({ lifeShow });
   }
 
   async store({ request, response }) {
     const lifeDataRequest = request.all();
     const lifeTransaction = await Database.beginTransaction();
-    console.log(lifeDataRequest);
-
     try {
       const userInstance = await generator.generateUser(
         lifeDataRequest,

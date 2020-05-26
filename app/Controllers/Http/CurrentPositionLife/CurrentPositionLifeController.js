@@ -2,23 +2,9 @@
 const GlobalPosition = use('App/Models/GlobalPosition');
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Life = use('App/Models/Life');
-class GlobalLifePositionController {
-  async index() {
-    const lives_positions = await Life.query()
-      .with('positions')
-      .fetch();
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 
-    return lives_positions;
-  }
-
-  async show({ params }) {
-    const { id } = params;
-    const life = await Life.find(id);
-
-    await life.load('positions');
-    return [life];
-  }
-
+class CurrentLifePositionController {
   async store({ request, response, auth }) {
     const { positions } = request.all();
     console.log(positions);
@@ -36,4 +22,4 @@ class GlobalLifePositionController {
   }
 }
 
-module.exports = GlobalLifePositionController;
+module.exports = CurrentLifePositionController;

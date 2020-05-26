@@ -1,46 +1,55 @@
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const User = use('App/Models/User');
+const Database = use('Database');
+const generator = require('./Generator');
 
 class UserController {
   async index({ response }) {
-    const users = await User.all();
+    const users = await User.query()
+      .with('profile')
+      .with('roles')
+      .fetch();
+
     return response.status(200).json({ users });
   }
 
   async show({ response, params }) {
-    const user = await User.findOrFail(params.id);
+    const user = await User.find(params.id);
     if (!user) {
-      return response.status(400).json({ error: 'User does not exist' });
+      return response.status(400).json({ error: 'O usuário não existe' });
     }
-    await user.loadMany(['roles', 'permissions']);
+    await user.loadMany(['roles', 'permissions', 'profile']);
     return response.status(200).json({ user });
   }
 
   async store({ request, response }) {
-    const { permissions, roles, ...data } = request.only([
-      'email',
-      'password',
-      'permissions',
-      'roles',
-      'name',
-      'identifier',
-    ]);
+    const userTransaction = await Database.beginTransaction();
 
-    console.log({ permissions, roles, ...data });
+    try {
+      const { profile, ...userRequest } = request.all();
 
-    const user = await User.create(data);
+      await generator.generateUserProfile(
+        { userRequest, profile },
+        userTransaction
+      );
 
-    if (roles) {
-      await user.roles().attach(roles);
+      return response
+        .status(201)
+        .json({ ok: 'Usuário cadastrado com sucesso' });
+    } catch (err) {
+      console.log(err);
+      if (userTransaction === null) {
+        return response.status(400).json({
+          error:
+            'não foi possível gravar o registro dos dados, valide as informações',
+        });
+      }
+      await userTransaction.rollback();
+      return response.status(400).json({
+        error:
+          'não foi possível gravar o registro dos dados, valide as informações',
+      });
     }
-
-    if (permissions) {
-      await user.permissions().attach(permissions);
-    }
-
-    await user.loadMany(['roles', 'permissions']);
-
-    return response.status(201).json({ user });
   }
 
   async update({ request, response, params }) {
@@ -55,9 +64,9 @@ class UserController {
     if (!dataRequest) {
       return response.status(400).send({ error: 'Dados não enviados' });
     }
-    const user = await User.findOrFail(params.id);
+    const user = await User.find(params.id);
     if (!user) {
-      return response.status(400).json({ error: 'User does not exist' });
+      return response.status(400).json({ error: 'Usuário não existe' });
     }
 
     if (roles) {
@@ -69,7 +78,7 @@ class UserController {
     }
     user.merge(dataRequest);
     await user.save();
-    await user.loadMany(['roles', 'permissions']);
+    await user.loadMany(['roles', 'permissions', 'profile']);
 
     return response.status(200).json({ user });
   }

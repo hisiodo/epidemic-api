@@ -15,7 +15,8 @@ class LifeGlobalPositionSchema extends Schema {
         .unsigned()
         .references('id')
         .on('global_positions');
-      table.timestamps();
+      table.timestamp('created_at', { useTz: true }).defaultTo(this.fn.now());
+      table.timestamp('updated_at', { useTz: true }).defaultTo(this.fn.now());
     });
   }
 

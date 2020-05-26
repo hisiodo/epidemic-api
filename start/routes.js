@@ -37,13 +37,13 @@ Route.group(() => {
 Route.group(() => {
   Route.resource(
     'life_positions',
-    'GlobalPositionLife/GlobalPositionLifeController'
+    'CurrentPositionLife/CurrentPositionLifeController'
   )
     .except(['show'])
     .middleware(['auth'])
     .validator(
       new Map([
-        [['users.store'], ['GlobalPositionLife/StoreGlobalPositionLife']],
+        [['users.store'], ['CurrentPositionLife/StoreGlobalPositionLife']],
       ])
     )
     .apiOnly();
@@ -51,25 +51,12 @@ Route.group(() => {
 
 Route.get(
   'life_positions/:id',
-  'GlobalPositionLife/GlobalPositionLifeController.show'
+  'CurrentPositionLife/CurrentPositionLifeController.show'
 ).middleware(['auth']);
 
-// Route.group(() => {
-//   Route.resource('companies', 'Company/CompanyController')
-//     .except(['show'])
-//     .validator(
-//       new Map([
-//         [['companies.store'], ['Company/StoreCompany']],
-//         [['companies.update'], ['Company/UpdateCompany']],
-//       ])
-//     )
-//     .apiOnly();
-// }).middleware(['auth', 'is:(administrator||moderator)']);
-
-// Route.get('/companies/:id', 'Company/CompanyController.show').middleware([
-//   'auth',
-//   'is:(administrator||moderator||seller)',
-// ]);
+Route.put('profiles/:id', 'Profile/ProfileController.update').middleware([
+  'auth',
+]);
 
 Route.group(() => {
   Route.resource('permissions', 'Permission/PermissionController').apiOnly();

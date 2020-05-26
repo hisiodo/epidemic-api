@@ -1,17 +1,15 @@
 class UpdateUser {
   get rules() {
     return {
-      email: 'email|unique:users',
+      identifier: 'string|unique:users',
       password: 'required',
-      authorized: 'boolean',
     };
   }
 
   get messages() {
     return {
-      'email.email': 'You must provide a valid email address.',
-      'email.unique': 'This email is already registered.',
-      'authorized.boolean': 'This value shuold be a boolean',
+      'identifier.email': 'You must provide a valid email address.',
+      'identifier.unique': 'This email is already registered.',
     };
   }
 

@@ -14,6 +14,7 @@ const globalMiddleware = [
   'Adonis/Middleware/BodyParser',
   'Adonis/Acl/Init',
   // 'App/Middleware/CheckRequest',
+  'App/Middleware/CheckToken',
 ];
 
 /*

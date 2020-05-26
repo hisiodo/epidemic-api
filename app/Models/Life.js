@@ -16,8 +16,8 @@ class Life extends Model {
   }
 
   positions() {
-    return this.belongsToMany('App/Models/GlobalPosition').pivotTable(
-      'life_global_positions'
+    return this.belongsToMany('App/Models/GlobalPosition').pivotModel(
+      'App/Models/LifeGlobalPosition'
     );
   }
 
