@@ -33,29 +33,33 @@ class LifeController {
   async show({ response, params, request }) {
     let date = request.input('date');
     const lifeId = params.id;
-    const life = await Life.query()
-      .where({ id: lifeId })
-      .with('user')
-      .with('homePosition')
-      .with('positions')
-      .fetch();
-    if (!life) {
-      return response.status(400).json({ error: 'Vida inexistente' });
-    }
-    if (!request.input('date')) {
-      date = formatDate(new Date());
-    }
+    try {
+      const life = await Life.query()
+        .where({ id: lifeId })
+        .with('user')
+        .with('homePosition')
+        .with('positions')
+        .fetch();
+      if (!request.input('date')) {
+        date = formatDate(new Date());
+      }
 
-    const positions = [
-      ...life
-        .toJSON()[0]
-        .positions.filter(
-          position => position.created_at.split(' ')[0] === date
-        ),
-    ];
-    const lifeShow = { ...life.toJSON()[0], positions };
+      const positions = [
+        ...life
+          .toJSON()[0]
+          .positions.filter(
+            position => position.created_at.split(' ')[0] === date
+          ),
+      ];
+      const lifeShow = { ...life.toJSON()[0], positions };
 
-    return response.status(200).json({ lifeShow });
+      return response.status(200).json({ life: lifeShow });
+    } catch (error) {
+      if (error.message.includes('undefined')) {
+        return response.status(400).json({ error: 'Vida inexistente' });
+      }
+      return response.status(400).json({ error: 'sua requisição falhou ' });
+    }
   }
 
   async store({ request, response }) {
