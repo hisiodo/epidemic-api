@@ -2,6 +2,7 @@
 const Life = use('App/Models/Life');
 const Database = use('Database');
 const Profile = use('App/Models/Profile');
+
 const generator = require('./Generator');
 const formatDate = require('../../../utils/Utils');
 
@@ -101,6 +102,34 @@ class LifeController {
           'não foi possível gravar o registro dos dados, valide as informações',
       });
     }
+  }
+
+  async updateSymptoms({ request, response, auth }) {
+    const lifeDataRequest = request.all();
+    const { user } = auth;
+    const life = await Life.findBy('user_id', user.id);
+    if (!life) {
+      return response.status(400).json({ error: 'Vida Inexistente' });
+    }
+
+    await life.merge(lifeDataRequest);
+    await life.save();
+
+    return response.status(200).json({ ok: 'Sintomas Atualizados' });
+  }
+
+  async update({ request, response, params }) {
+    const lifeDataRequest = request.all();
+
+    const life = await Life.find(params.id);
+    if (!life) {
+      return response.status(400).json({ error: 'Vida Inexistente' });
+    }
+
+    await life.merge(lifeDataRequest);
+    await life.save();
+
+    return response.status(200).json({ ok: 'Vida Atualizada' });
   }
 }
 
