@@ -32,7 +32,7 @@ class UserController {
         { userRequest, profile },
         userTransaction
       );
-
+      await userTransaction.commit();
       return response
         .status(201)
         .json({ ok: 'Usuário cadastrado com sucesso' });

@@ -9,7 +9,7 @@ class StoreUser {
   get messages() {
     return {
       'identifier.required': 'You must provide a email address.',
-      'identifier.unique': 'This email is already registered.',
+      'identifier.unique': 'This identifier is already registered.',
       'password.required': 'You must provide a password',
     };
   }

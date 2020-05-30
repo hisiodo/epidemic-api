@@ -79,6 +79,7 @@ class LifeController {
       await lifeTransaction.commit();
       await lifeInstance.user().associate(userInstance);
       await lifeInstance.homePosition().associate(homePositionInstance);
+      await lifeTransaction.commit();
       return response.status(201).json({
         data: {
           life: lifeInstance,

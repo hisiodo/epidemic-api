@@ -22,7 +22,6 @@ class Generator {
           .permissions()
           .attach(userRequest.permissions, null, transaction);
       }
-      console.log(userInstance);
 
       await Profile.create(
         { ...profile, user_id: userInstance.id },
