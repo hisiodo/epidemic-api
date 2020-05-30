@@ -51,7 +51,10 @@ class LifeController {
             position => position.created_at.split(' ')[0] === date
           ),
       ];
-      const lifeShow = { ...life.toJSON()[0], positions };
+
+      const profile = await Profile.findBy('user_id', `${lifeId}`);
+
+      const lifeShow = { ...life.toJSON()[0], positions, profile };
 
       return response.status(200).json({ life: lifeShow });
     } catch (error) {
