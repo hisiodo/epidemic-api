@@ -23,10 +23,16 @@ Route.group(() => {
 
 Route.group(() => {
   Route.resource('lives', 'Life/LifeController')
-    // .middleware(['auth'])
+    .except(['update'])
+    .middleware(['auth'])
     .apiOnly();
   // .validator(new Map([[['lives.store'], ['User/StoreUser']]]))
 });
+Route.put(
+  'lives/symptoms/:id',
+  'Life/LifeController.updateSymptoms'
+).middleware(['auth']);
+Route.put('lives/:id', 'Life/LifeController.update').middleware(['auth']);
 
 Route.group(() => {
   Route.resource('sessions', 'Session/SessionController')
