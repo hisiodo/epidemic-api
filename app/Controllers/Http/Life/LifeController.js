@@ -1,8 +1,13 @@
+/* eslint-disable no-const-assign */
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Life = use('App/Models/Life');
 const Database = use('Database');
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Profile = use('App/Models/Profile');
-
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
+const User = use('App/Models/User');
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
+const GlobalPosition = use('App/Models/GlobalPosition');
 const generator = require('./Generator');
 const formatDate = require('../../../utils/Utils');
 
@@ -45,6 +50,11 @@ class LifeController {
         date = formatDate(new Date());
       }
 
+      const profile = await Profile.findBy(
+        'user_id',
+        `${life.toJSON()[0].user.id}`
+      );
+
       const positions = [
         ...life
           .toJSON()[0]
@@ -52,7 +62,7 @@ class LifeController {
             position => position.created_at.split(' ')[0] === date
           ),
       ];
-      const lifeShow = { ...life.toJSON()[0], positions };
+      const lifeShow = { ...life.toJSON()[0], positions, profile };
 
       return response.status(200).json({ life: lifeShow });
     } catch (error) {
@@ -104,30 +114,69 @@ class LifeController {
     }
   }
 
-  async updateSymptoms({ request, response, auth }) {
-    const lifeDataRequest = request.all();
-    const { user } = auth;
-    const life = await Life.findBy('user_id', user.id);
-    if (!life) {
-      return response.status(400).json({ error: 'Vida Inexistente' });
-    }
-
-    await life.merge(lifeDataRequest);
-    await life.save();
-
-    return response.status(200).json({ ok: 'Sintomas Atualizados' });
-  }
-
   async update({ request, response, params }) {
-    const lifeDataRequest = request.all();
+    const data = request.all();
+    const { life, user, profile, home_position } = data;
 
-    const life = await Life.find(params.id);
-    if (!life) {
+    const lifeInstance = await Life.find(params.id);
+
+    if (!lifeInstance) {
       return response.status(400).json({ error: 'Vida Inexistente' });
     }
+    const userInstanceUpdate = await User.find(user.id);
 
-    await life.merge(lifeDataRequest);
-    await life.save();
+    if (userInstanceUpdate) {
+      const { identifier, email } = user;
+      const userAlreadyExist =
+        (await User.findBy('identifier', identifier)) ||
+        (await User.findBy('email', email));
+      if (userAlreadyExist) {
+        return response
+          .status(400)
+          .json({ error: 'Esse identificador já existe' });
+      }
+    }
+
+    const profileInstanceUpdate = await Profile.find(profile.id);
+    if (profileInstanceUpdate) {
+      const { cpf } = profile;
+      const profileAlreadyExist = await Profile.findBy('cpf', cpf);
+
+      if (profileAlreadyExist) {
+        return response
+          .status(400)
+          .json({ error: 'Este cpf já está cadastrado' });
+      }
+    }
+
+    const homePorisionInstance = await GlobalPosition.find(home_position.id);
+    const lifeTransaction = await Database.beginTransaction();
+    console.log(profile);
+    try {
+      await Promise.all([
+        await homePorisionInstance.merge(home_position),
+        await homePorisionInstance.save(lifeTransaction),
+        await userInstanceUpdate.merge(user),
+        await userInstanceUpdate.save(lifeTransaction),
+        await profileInstanceUpdate.merge(profile),
+        await profileInstanceUpdate.save(lifeTransaction),
+        await lifeInstance.merge(life),
+        await lifeInstance.save(lifeTransaction),
+      ]);
+      await lifeTransaction.commit();
+    } catch (error) {
+      if (lifeTransaction === null) {
+        await lifeTransaction.rollback();
+
+        return response.status(400).json({
+          erro: error,
+        });
+      }
+      await lifeTransaction.rollback();
+      return response
+        .status(400)
+        .json({ error: 'Dados não puderam ser atualizados' });
+    }
 
     return response.status(200).json({ ok: 'Vida Atualizada' });
   }

@@ -28,10 +28,11 @@ Route.group(() => {
     .apiOnly();
   // .validator(new Map([[['lives.store'], ['User/StoreUser']]]))
 });
-Route.put(
+Route.post(
   'lives/symptoms/:id',
-  'Life/LifeController.updateSymptoms'
+  'SymptomsHistory/SymptomsHistoryController.store'
 ).middleware(['auth']);
+
 Route.put('lives/:id', 'Life/LifeController.update').middleware(['auth']);
 
 Route.group(() => {

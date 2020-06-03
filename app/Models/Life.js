@@ -15,6 +15,10 @@ class Life extends Model {
     return this.belongsTo('App/Models/User', 'user_id', 'id');
   }
 
+  healthHistory() {
+    return this.hasOne('/App/Models/SymptomsHistory');
+  }
+
   positions() {
     return this.belongsToMany('App/Models/GlobalPosition').pivotModel(
       'App/Models/LifeGlobalPosition'
