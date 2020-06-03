@@ -16,7 +16,11 @@ class Life extends Model {
   }
 
   healthHistory() {
-    return this.hasOne('/App/Models/SymptomsHistory');
+    return this.hasMany(
+      '/App/Models/SymptomsHistory',
+      'symptoms_histories',
+      'id'
+    );
   }
 
   positions() {

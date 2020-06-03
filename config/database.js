@@ -35,7 +35,7 @@ module.exports = {
       ),
     },
     useNullAsDefault: true,
-    debug: Env.get('DB_DEBUG', true),
+    debug: Env.get('DB_DEBUG', false),
   },
 
   /*

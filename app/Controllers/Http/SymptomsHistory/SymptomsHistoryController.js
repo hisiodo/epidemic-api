@@ -5,6 +5,21 @@ const checkStatushealth = require('./CalculateStatus');
 const Life = use('App/Models/Life');
 
 class SymptomsHistoryController {
+  async show({ response, params }) {
+    console.log(params);
+    const { life_id } = params;
+
+    const history = await SymptomsHistory.query()
+      .where('life_id', life_id)
+      .fetch();
+
+    if (!history || history.size() === 0) {
+      return response.status(400).json({ error: 'Histórico inexistente' });
+    }
+
+    return response.status(200).json({ history });
+  }
+
   async store({ request, response, auth }) {
     const dataRequest = request.all();
 

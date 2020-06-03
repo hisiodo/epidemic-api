@@ -69,6 +69,7 @@ class LifeController {
       if (error.message.includes('undefined')) {
         return response.status(400).json({ error: 'Vida inexistente' });
       }
+      console.log(error);
       return response.status(400).json({ error: 'sua requisição falhou ' });
     }
   }

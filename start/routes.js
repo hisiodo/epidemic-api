@@ -32,6 +32,10 @@ Route.post(
   'lives/symptoms/:id',
   'SymptomsHistory/SymptomsHistoryController.store'
 ).middleware(['auth']);
+Route.get(
+  'lives/symptoms/:life_id',
+  'SymptomsHistory/SymptomsHistoryController.show'
+).middleware(['auth']);
 
 Route.put('lives/:id', 'Life/LifeController.update').middleware(['auth']);
 
