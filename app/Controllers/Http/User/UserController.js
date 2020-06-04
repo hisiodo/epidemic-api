@@ -28,14 +28,14 @@ class UserController {
     try {
       const { profile, ...userRequest } = request.all();
 
-      await generator.generateUserProfile(
+      const userInstance = await generator.generateUserProfile(
         { userRequest, profile },
         userTransaction
       );
       await userTransaction.commit();
       return response
         .status(201)
-        .json({ ok: 'Usuário cadastrado com sucesso' });
+        .json({ ok: 'Usuário cadastrado com sucesso', user: userInstance });
     } catch (err) {
       console.log(err);
       if (userTransaction === null) {
