@@ -13,12 +13,20 @@ const formatDate = require('../../../utils/Utils');
 
 class LifeController {
   async index({ response, request }) {
+    const name = request.input('name') ? request.input('name') : '';
+
     const page = request.input('page');
-    const lives = await Life.query()
+    let lives = null;
+
+    lives = await Life.query()
       .with('homePosition')
-      .with('user')
       .with('positions')
+      .with('user', builder => builder.whereRaw('name like ?', [`%${name}%`]))
       .paginate(page, 30);
+    console.log(lives);
+    if (!lives.rows[0].user) {
+      return response.status(200).json({ data: [] });
+    }
 
     const livesFiltered = async () => {
       return Promise.all(
@@ -33,7 +41,7 @@ class LifeController {
 
     const livesChanged = await livesFiltered();
 
-    return response.status(200).json(livesChanged);
+    return response.status(200).json({ data: livesChanged });
   }
 
   async show({ response, params, request }) {
