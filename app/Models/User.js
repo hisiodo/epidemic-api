@@ -30,11 +30,19 @@ class User extends Model {
     return this.hasMany('App/Models/Token');
   }
 
+  life() {
+    this.hasMany('App/Models/Life');
+  }
+
   static get traits() {
     return [
       '@provider:Adonis/Acl/HasRole',
       '@provider:Adonis/Acl/HasPermission',
     ];
+  }
+
+  profile() {
+    return this.hasOne('App/Models/Profile');
   }
 }
 
