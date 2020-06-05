@@ -32,11 +32,8 @@
 		"@adonisjs/lucid": "^6.1.3",
 		"@adonisjs/validator": "^5.0.6",
 		"adonis-acl": "^1.1.1",
-<<<<<<< HEAD
 		"pg": "^8.2.1",
-=======
 		"date-fns": "^2.14.0",
->>>>>>> 86f3510178e6d60f40942483d6fbd6ac5b29827a
 		"sqlite3": "^4.1.1"
 	},
 	"devDependencies": {
