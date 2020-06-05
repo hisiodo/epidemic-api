@@ -22,28 +22,52 @@ Route.group(() => {
 });
 
 Route.group(() => {
+  Route.resource('lives', 'Life/LifeController')
+    .except(['update'])
+    .middleware(['auth'])
+    .apiOnly();
+  // .validator(new Map([[['lives.store'], ['User/StoreUser']]]))
+});
+Route.post(
+  'lives/symptoms/:id',
+  'SymptomsHistory/SymptomsHistoryController.store'
+).middleware(['auth']);
+Route.get(
+  'lives/symptoms/:life_id',
+  'SymptomsHistory/SymptomsHistoryController.show'
+).middleware(['auth']);
+
+Route.put('lives/:id', 'Life/LifeController.update').middleware(['auth']);
+
+Route.group(() => {
   Route.resource('sessions', 'Session/SessionController')
     .validator(new Map([[['sessions.store'], ['Session/StoreSession']]]))
     .apiOnly();
 });
 
+Route.group(() => {
+  Route.resource(
+    'life_positions',
+    'CurrentPositionLife/CurrentPositionLifeController'
+  )
+    .except(['show'])
+    .middleware(['auth'])
+    .validator(
+      new Map([
+        [['users.store'], ['CurrentPositionLife/StoreGlobalPositionLife']],
+      ])
+    )
+    .apiOnly();
+});
 
-// Route.group(() => {
-//   Route.resource('companies', 'Company/CompanyController')
-//     .except(['show'])
-//     .validator(
-//       new Map([
-//         [['companies.store'], ['Company/StoreCompany']],
-//         [['companies.update'], ['Company/UpdateCompany']],
-//       ])
-//     )
-//     .apiOnly();
-// }).middleware(['auth', 'is:(administrator||moderator)']);
+Route.get(
+  'life_positions/:id',
+  'CurrentPositionLife/CurrentPositionLifeController.show'
+).middleware(['auth']);
 
-// Route.get('/companies/:id', 'Company/CompanyController.show').middleware([
-//   'auth',
-//   'is:(administrator||moderator||seller)',
-// ]);
+Route.put('profiles/:id', 'Profile/ProfileController.update').middleware([
+  'auth',
+]);
 
 Route.group(() => {
   Route.resource('permissions', 'Permission/PermissionController').apiOnly();

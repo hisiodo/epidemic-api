@@ -5,12 +5,13 @@ class UserSchema extends Schema {
   up() {
     this.create('users', table => {
       table.increments();
+      table.string('email', 254).unique();
       table
-        .string('email', 254)
-        .notNullable()
-        .unique();
+        .string('identifier', 254)
+        .unique()
+        .notNullable();
+      table.string('name', 100).notNullable();
       table.string('password', 60).notNullable();
-      table.boolean('authorized').notNullable();
 
       table.timestamps();
     });
