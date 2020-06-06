@@ -9,7 +9,7 @@ class LifeGlobalPositionSchema extends Schema {
         .integer('life_id')
         .unsigned()
         .references('id')
-        .on('lifes');
+        .on('lives');
       table
         .integer('global_position_id')
         .unsigned()

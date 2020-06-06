@@ -134,11 +134,9 @@ class LifeController {
     }
     const userInstanceUpdate = await User.find(user.id);
 
-    if (userInstanceUpdate) {
-      const { identifier, email } = user;
-      const userAlreadyExist =
-        (await User.findBy('identifier', identifier)) ||
-        (await User.findBy('email', email));
+    const { identifier } = user;
+    if (identifier !== userInstanceUpdate.identifier) {
+      const userAlreadyExist = await User.findBy('identifier', identifier);
       if (userAlreadyExist) {
         return response
           .status(400)
@@ -146,15 +144,26 @@ class LifeController {
       }
     }
 
+    const { email } = user;
+    if (email !== userInstanceUpdate.email) {
+      const userAlreadyExist = await User.findBy('email', email);
+      if (userAlreadyExist) {
+        return response
+          .status(400)
+          .json({ error: 'Esse email já está cadastrado' });
+      }
+    }
+
     const profileInstanceUpdate = await Profile.find(profile.id);
     if (profileInstanceUpdate) {
       const { cpf } = profile;
       const profileAlreadyExist = await Profile.findBy('cpf', cpf);
-
-      if (profileAlreadyExist) {
-        return response
-          .status(400)
-          .json({ error: 'Este cpf já está cadastrado' });
+      if (cpf !== profileInstanceUpdate.cpf) {
+        if (profileAlreadyExist) {
+          return response
+            .status(400)
+            .json({ error: 'Este cpf já está cadastrado' });
+        }
       }
     }
 
