@@ -57,7 +57,6 @@ class LifeController {
       if (!request.input('date')) {
         date = formatDate(new Date());
       }
-
       const profile = await Profile.findBy(
         'user_id',
         `${life.toJSON()[0].user.id}`
@@ -77,7 +76,7 @@ class LifeController {
       if (error.message.includes('undefined')) {
         return response.status(400).json({ error: 'Vida inexistente' });
       }
-      console.log(error);
+
       return response.status(400).json({ error: 'sua requisição falhou ' });
     }
   }
@@ -197,6 +196,18 @@ class LifeController {
     }
 
     return response.status(200).json({ ok: 'Vida Atualizada' });
+  }
+
+  async destroy({ params, response }) {
+    const { id } = params;
+
+    const life = await Life.find(id);
+    if (!life) {
+      return response.status(400).json({ error: 'Vida Inexistente' });
+    }
+
+    await life.delete();
+    return response.status(204);
   }
 }
 

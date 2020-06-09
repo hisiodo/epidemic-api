@@ -27,7 +27,7 @@ class UserSeeder {
       last_name: 'Girau',
       phone: '99999999',
       gender: 'M',
-      birth_date: '31-05-2020',
+      birth_date: '2020-05-31',
       cpf: '00000000000',
       street: 'Rua Girau',
       district: 'Girau',
