@@ -5,14 +5,14 @@
 	"description": "Adonisjs boilerplate for API server with pre-configured JWT",
 	"main": "index.js",
 	"scripts": {
-    "start": "node server.js",
-    "dev": "adonis serve --dev",
+		"start": "node server.js",
+		"dev": "adonis serve --dev",
 		"test": "node ace test",
 		"debug": "adonis serve --dev --debug",
-    "test:debug": "node --nolazy --inspect-brk=9229 ace test",
-    "migrate": "adonis migration:run",
-    "seed": "adonis seed --files='PermissionSeeder.js, RoleSeeder.js, UserSeeder.js'",
-    "bootstrap": "yarn migrate && yarn seed"
+		"test:debug": "node --nolazy --inspect-brk=9229 ace test",
+		"migrate": "adonis migration:run",
+		"seed": "adonis seed --files='PermissionSeeder.js, RoleSeeder.js, UserSeeder.js'",
+		"bootstrap": "yarn migrate && yarn seed"
 	},
 	"keywords": [
 		"adonisjs",
@@ -34,6 +34,7 @@
 		"adonis-acl": "^1.1.1",
 		"pg": "^8.2.1",
 		"date-fns": "^2.14.0",
+		"pg": "^8.2.1",
 		"sqlite3": "^4.1.1"
 	},
 	"devDependencies": {

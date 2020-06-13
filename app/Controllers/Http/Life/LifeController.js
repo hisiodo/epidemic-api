@@ -57,7 +57,6 @@ class LifeController {
       if (!request.input('date')) {
         date = formatDate(new Date());
       }
-
       const profile = await Profile.findBy(
         'user_id',
         `${life.toJSON()[0].user.id}`
@@ -77,7 +76,7 @@ class LifeController {
       if (error.message.includes('undefined')) {
         return response.status(400).json({ error: 'Vida inexistente' });
       }
-      console.log(error);
+
       return response.status(400).json({ error: 'sua requisição falhou ' });
     }
   }
@@ -134,11 +133,9 @@ class LifeController {
     }
     const userInstanceUpdate = await User.find(user.id);
 
-    if (userInstanceUpdate) {
-      const { identifier, email } = user;
-      const userAlreadyExist =
-        (await User.findBy('identifier', identifier)) ||
-        (await User.findBy('email', email));
+    const { identifier } = user;
+    if (identifier !== userInstanceUpdate.identifier) {
+      const userAlreadyExist = await User.findBy('identifier', identifier);
       if (userAlreadyExist) {
         return response
           .status(400)
@@ -146,15 +143,26 @@ class LifeController {
       }
     }
 
+    const { email } = user;
+    if (email !== userInstanceUpdate.email) {
+      const userAlreadyExist = await User.findBy('email', email);
+      if (userAlreadyExist) {
+        return response
+          .status(400)
+          .json({ error: 'Esse email já está cadastrado' });
+      }
+    }
+
     const profileInstanceUpdate = await Profile.find(profile.id);
     if (profileInstanceUpdate) {
       const { cpf } = profile;
       const profileAlreadyExist = await Profile.findBy('cpf', cpf);
-
-      if (profileAlreadyExist) {
-        return response
-          .status(400)
-          .json({ error: 'Este cpf já está cadastrado' });
+      if (cpf !== profileInstanceUpdate.cpf) {
+        if (profileAlreadyExist) {
+          return response
+            .status(400)
+            .json({ error: 'Este cpf já está cadastrado' });
+        }
       }
     }
 
@@ -188,6 +196,18 @@ class LifeController {
     }
 
     return response.status(200).json({ ok: 'Vida Atualizada' });
+  }
+
+  async destroy({ params, response }) {
+    const { id } = params;
+
+    const life = await Life.find(id);
+    if (!life) {
+      return response.status(400).json({ error: 'Vida Inexistente' });
+    }
+
+    await life.delete();
+    return response.status(204);
   }
 }
 
